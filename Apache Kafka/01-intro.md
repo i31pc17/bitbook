@@ -72,7 +72,7 @@ Kafka는 수많은 글로벌 기업에서 사용하고 있습니다. 그 예시�
 
 ---
 
-## 1.4 Kafka 간단한 예시 (시퀀스 다이어그램)
+## 1.4 Kafka 간단한 예시
 
 ```mermaid
 sequenceDiagram
