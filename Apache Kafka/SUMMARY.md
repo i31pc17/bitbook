@@ -2,7 +2,7 @@
 
 * [소개](README.md)
 * [1장. Kafka란 무엇인가](01-intro.md)
-  * [1.1 Kafka는 어떤 서비스인가?](01-intro.md#11-kafka는-어떤-서비스인가)
+  * [1.1 Kafka는 어떤 서비스인가?](01-intro.md#11-kafka는-어떤-서비스인가요)
   * [1.2 Kafka는 왜 사용하는가?](01-intro.md#12-kafka는-왜-사용하는가)
   * [1.3 Kafka는 어떤 상황에서 사용되는가?](01-intro.md#13-kafka는-어떤-상황에서-사용되는가)
   * [1.4 Kafka 간단한 사용 예시](01-intro.md#14-kafka-간단한-사용-예시)
