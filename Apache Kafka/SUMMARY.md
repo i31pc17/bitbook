@@ -36,3 +36,8 @@
   * [5.6 왜 Kafka는 3대 이상 브로커 구성이 필요할까?](05-cluster-broker.md#56-왜-kafka는-3대-이상-브로커-구성이-필요할까)
   * [5.7 장애 발생 시 Kafka는 어떻게 동작할까?](05-cluster-broker.md#57-장애-발생-시-kafka는-어떻게-동작할까)
   * [5.8 브로커 수 설계 팁](05-cluster-broker.md#58-브로커-수-설계-팁)
+* [6장. Kafka 설치 및 기본 사용법](06-kafka-setup.md)
+  * [6.1 Docker 설치](06-kafka-setup.md#61-docker-설치-amazon-linux-2023-기준)
+  * [6.2 Kafka 브로커 실행](06-kafka-setup.md#62-kafka-브로커-실행)
+  * [6.3 토픽 생성 및 메시지 송수신 테스트 (Producer → Consumer 순)](06-kafka-setup.md#63-토픽-생성-및-메시지-송수신-테스트-producer--consumer-순)
+  * [6.4 테스트 종료 및 정리](06-kafka-setup.md#64-테스트-종료-및-정리)
