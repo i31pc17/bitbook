@@ -99,14 +99,26 @@ log.segment.bytes=1073741824
 
 ## 7.7 토픽 기본 설정
 
-Kafka는 토픽 생성 시 기본값으로 적용할 파티션 수와 복제 수를 설정할 수 있습니다.
+Kafka는 토픽 생성 시 기본값으로 적용할 파티션 수, 복제 수, 최소 동기화 복제본 수를 아래 항목으로 설정할 수 있습니다.
 
 ```properties
 num.partitions=1
 default.replication.factor=3
+min.insync.replicas=2
 ```
 
-> 복제 수는 클러스터 브로커 수보다 크면 오류가 발생하므로, 브로커 수 이하로 설정해야 합니다.
+- `num.partitions`: 새 토픽 생성 시 기본 파티션 수 (기본값: 1)
+- `default.replication.factor`: 새 토픽 생성 시 기본 복제 수. 클러스터의 브로커 수보다 크면 오류가 발생합니다.
+- `min.insync.replicas`: 메시지를 쓰기 위해 최소한으로 살아 있어야 하는 복제본 수
+
+### default.replication.factor 와 min.insync.replicas 관계
+
+- 이 두 값은 반드시 **함께 고려하여 설정**해야 합니다.
+- 예: `default.replication.factor=3`일 때, `min.insync.replicas=2` 이상이면 복제 안정성이 확보됩니다.
+- 만약 브로커 3대 중 2대만 살아 있는데 `min.insync.replicas=3`이면 메시지를 쓸 수 없어 **쓰기 실패**가 발생합니다.
+- 반대로 `min.insync.replicas=1`처럼 너무 낮게 설정하면, 하나의 복제본만 살아 있어도 메시지를 기록하게 되어 **데이터 유실 위험**이 커집니다.
+
+> 운영 환경에서는 일반적으로 복제 수의 과반수를 `min.insync.replicas`로 설정하는 것이 안전합니다.
 
 ## 7.8 기타 유용한 설정
 
@@ -115,14 +127,12 @@ log.cleanup.policy=delete
 delete.topic.enable=true
 auto.create.topics.enable=true
 message.max.bytes=1048576
-min.insync.replicas=1
 ```
 
 - `log.cleanup.policy`: 메시지를 삭제할지(`delete`) 압축할지(`compact`) 선택
 - `delete.topic.enable`: 토픽을 삭제할 수 있는지 여부
 - `auto.create.topics.enable`: 존재하지 않는 토픽으로 메시지를 전송했을 때 자동 생성 여부
 - `message.max.bytes`: 프로듀서가 전송할 수 있는 메시지의 최대 크기 (기본값: 1MB). 큰 메시지를 보내려면 이 값을 조정해야 합니다.
-- `min.insync.replicas`: 복제본 중 최소 몇 개가 살아 있어야 메시지를 쓸 수 있는지 설정합니다. `acks=all`일 경우 이 숫자보다 적으면 쓰기가 실패합니다.
 
 운영 환경에서는 `auto.create.topics.enable=false`로 설정하는 것이 일반적입니다.
 
@@ -157,6 +167,7 @@ log.dirs=/var/lib/kafka/data1
 log.retention.hours=168
 num.partitions=1
 default.replication.factor=3
+min.insync.replicas=2
 ```
 
 broker2, broker3는 node.id, CONTROLLER 포트, log.dirs, advertised.listeners 부분만 각각 다르게 설정하면 됩니다.
