@@ -4,7 +4,7 @@ Kafka 4.0부터는 Zookeeper 없이 Kafka 클러스터를 구성할 수 있습�
 이 장에서는 Docker Compose를 이용해 Kafka KRaft 클러스터를 손쉽게 구성하고,  
 토픽 생성부터 메시지 송수신까지 간단한 실습을 진행합니다.
 
-## 8.1 Docker Compose 설치 (Linux x86_64 기준)
+## 8.1 Docker Compose 설치 (Amazon Linux 2023 기준)
 
 Kafka 클러스터 구성을 쉽게 하기 위해 Docker Compose를 사용합니다.
 
