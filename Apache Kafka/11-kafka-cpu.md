@@ -37,7 +37,46 @@ Kafka에서 CPU의 성능은 다음 세 가지 요소로 판단할 수 있습니
 
 ---
 
-## 11.3 노드 유형별 CPU 선택 기준
+## 11.3 IPC란 무엇인가?
+
+IPC(Instructions Per Cycle)는 CPU가 한 클럭 주기 동안 처리할 수 있는 명령어 수를 뜻합니다. CPU 내부 설계(파이프라인, 캐시, 분기 예측 등)에 따라 IPC가 달라지며, 같은 클럭이라도 IPC가 높으면 더 빠른 성능을 발휘합니다.
+
+- IPC는 세대가 높을수록 개선되는 경향이 있습니다.
+- 예: Intel Skylake → Alder Lake → Raptor Lake
+- 예: AMD Zen → Zen 2 → Zen 3 → Zen 4
+
+➡️ 같은 클럭과 코어 수라도 **세대가 다르면 성능 차이가 큽니다.**
+
+---
+
+## 11.4 CPU 성능 확인 방법
+
+IPC는 CPU 제조사에서 명확하게 수치를 제공하지 않기 때문에, 실제 성능은 벤치마크 점수를 참고하는 것이 좋습니다.
+
+### 벤치마크 확인 사이트
+- [PassMark](https://www.cpubenchmark.net/)
+- [Geekbench](https://browser.geekbench.com/)
+- [Cinebench (Single/Multi core)](https://www.maxon.net/en/cinebench)
+
+이 사이트들에서는 CPU 모델명을 입력하면 상대적인 점수와 싱글/멀티 코어 성능을 확인할 수 있습니다.
+
+---
+
+## 11.5 AWS 인스턴스에서의 CPU 선택 참고사항
+
+Kafka를 AWS EC2에서 운영할 경우, 인스턴스 유형에 따라 탑재된 CPU 종류가 다르므로 주의가 필요합니다.
+
+- 같은 vCPU 수여도, 인스턴스에 따라 실제 성능 차이가 클 수 있습니다.
+- 예를 들어, `c6i`와 `c5`는 모두 8 vCPU로 구성할 수 있지만, 장착된 CPU 아키텍처나 세대가 다르면 IPC와 클럭이 달라 실제 처리 성능이 다릅니다.
+- 또한, 인텔과 AMD 계열, Graviton ARM 계열 간에도 성능 특성이 다릅니다.
+
+### 확인 팁
+- [AWS 공식 EC2 인스턴스 문서](https://aws.amazon.com/ec2/instance-types/)에서 각 인스턴스에 어떤 CPU가 장착되어 있는지 확인할 수 있습니다.
+- EC2 콘솔에서 "인스턴스 유형"을 선택하면 탑재된 CPU 모델을 직접 확인할 수 있습니다.
+
+> 참고: vCPU 수가 많다고 해서 반드시 성능이 선형적으로 향상되는 것은 아니며, 클럭과 IPC, 워크로드 특성을 함께 고려해야 합니다.
+
+## 11.6 노드 유형별 CPU 선택 기준
 
 ### 브로커 전용 노드
 - 메시지 전송/수신, 압축, 인코딩, 디스크 처리 집중
@@ -56,32 +95,7 @@ Kafka에서 CPU의 성능은 다음 세 가지 요소로 판단할 수 있습니
 
 ---
 
-## 11.4 CPU 성능 확인 방법
-
-IPC는 CPU 제조사에서 명확하게 수치를 제공하지 않기 때문에, 실제 성능은 벤치마크 점수를 참고하는 것이 좋습니다.
-
-### 벤치마크 확인 사이트
-- [PassMark](https://www.cpubenchmark.net/)
-- [Geekbench](https://browser.geekbench.com/)
-- [Cinebench (Single/Multi core)](https://www.maxon.net/en/cinebench)
-
-이 사이트들에서는 CPU 모델명을 입력하면 상대적인 점수와 싱글/멀티 코어 성능을 확인할 수 있습니다.
-
----
-
-## 11.5 IPC란 무엇인가?
-
-IPC(Instructions Per Cycle)는 CPU가 한 클럭 주기 동안 처리할 수 있는 명령어 수를 뜻합니다. CPU 내부 설계(파이프라인, 캐시, 분기 예측 등)에 따라 IPC가 달라지며, 같은 클럭이라도 IPC가 높으면 더 빠른 성능을 발휘합니다.
-
-- IPC는 세대가 높을수록 개선되는 경향이 있습니다.
-- 예: Intel Skylake → Alder Lake → Raptor Lake
-- 예: AMD Zen → Zen 2 → Zen 3 → Zen 4
-
-➡️ 같은 클럭과 코어 수라도 **세대가 다르면 성능 차이가 큽니다.**
-
----
-
-## 11.6 CPU 선택 요약
+## 11.7 CPU 선택 요약
 
 | 노드 유형 | 권장 사양 |
 |-----------|-------------|
