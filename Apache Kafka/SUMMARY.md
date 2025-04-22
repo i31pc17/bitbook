@@ -65,6 +65,7 @@
   * [9.4 환경별 디스크 선택 기준](09-kafka-disk.md#94-환경별-디스크-선택-기준)
   * [9.5 설정과 함께 고려할 점](09-kafka-disk.md#95-설정과-함께-고려할-점)
   * [9.6 Kafka 디스크 구성 주의사항](09-kafka-disk.md#96-kafka-디스크-구성-주의사항)
+  * [9.7 JBOD와 디스크 전략](09-kafka-disk.md#97-jbod와-디스크-전략)
 * [10장. Kafka 메모리 선택 가이드 (KRaft 기반)](10-kafka-memory.md)
   * [10.1 Kafka에서 말하는 '메모리'란?](10-kafka-memory.md#101-kafka에서-말하는-메모리란)
   * [10.2 JVM Heap과 Page Cache 쉽게 이해하기](10-kafka-memory.md#102-jvm-heap과-page-cache-쉽게-이해하기)
