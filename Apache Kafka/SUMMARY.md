@@ -97,3 +97,8 @@
   * [13.4 디스크립터 수 계산 방법](13-file-descriptor.md#134-디스크립터-수-계산-방법)
   * [13.5 관련 설정 확인 방법](13-file-descriptor.md#135-관련-설정-확인-방법)
   * [13.6 디스크립터 수 설정 방법 (Linux)](13-file-descriptor.md#136-디스크립터-수-설정-방법-linux)
+* [14장. Kafka 가상 메모리 튜닝](14-memory-swap.md)
+  * [14.1 스와핑(Swapping)이란?](14-memory-swap.md#141-스와핑swapping이란)
+  * [14.2 Kafka에서 스와핑이 문제가 되는 이유](14-memory-swap.md#142-kafka에서-스와핑이-문제가-되는-이유)
+  * [14.3 `vm.swappiness`란?](14-memory-swap.md#143-vmswappiness란)
+  * [14.4 설정값의 의미와 Kafka 권장값](14-memory-swap.md#144-설정값의-의미와-kafka-권장값)
