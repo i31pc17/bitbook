@@ -103,6 +103,8 @@ socket.send.buffer.bytes=524288
 ```
 > BDP에 따라 더 큰 값을 적용할 수도 있습니다.
 
+> ※ 참고: Kafka 브로커 설정(`socket.receive.buffer.bytes`, `socket.send.buffer.bytes`)은 OS 커널 설정(`net.core.rmem_max`, `net.core.wmem_max`)의 최대값을 초과할 수 없습니다. Kafka가 요청한 값이 커널 최대값을 넘으면 커널이 강제로 잘라 적용합니다. 따라서 OS와 Kafka 설정을 함께 조정해야 합니다.
+
 ---
 
 ## 15.7 NIC 속도별 기본/최대 버퍼 추천값 (RTT 50ms 기준)
