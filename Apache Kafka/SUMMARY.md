@@ -66,6 +66,7 @@
   * [9.5 설정과 함께 고려할 점](09-kafka-disk.md#95-설정과-함께-고려할-점)
   * [9.6 Kafka 디스크 구성 주의사항](09-kafka-disk.md#96-kafka-디스크-구성-주의사항)
   * [9.7 JBOD와 디스크 전략](09-kafka-disk.md#97-jbod와-디스크-전략)
+  * [9.8 파일 시스템](09-kafka-disk.md#98-파일-시스템)
 * [10장. Kafka 메모리 선택 가이드](10-kafka-memory.md)
   * [10.1 Kafka에서 메모리가 사용되는 영역](10-kafka-memory.md#101-kafka에서-메모리가-사용되는-영역)
   * [10.2 Page Cache 용량 계산](10-kafka-memory.md#102-page-cache-용량-계산)
