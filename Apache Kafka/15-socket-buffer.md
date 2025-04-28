@@ -18,8 +18,9 @@ TCP에서는 버퍼 크기를 다음 세 단계로 나눠서 관리합니다.
 |:---|:---|
 | 최소 (min) | 절대 보장해야 하는 가장 작은 버퍼 크기 (일반적으로 4KB) |
 | 기본 (default) | 연결이 시작할 때 사용하는 기본 버퍼 크기 (Kafka에서는 512KB 권장) |
-| 최대 (max) | 네트워크 상황이 좋을 때 확장 가능한 최대 버퍼 크기 (BDP 계산 기반) |
+| 최대 (max) | 네트워크 상황이 좋을 때 확장 가능한 최대 버퍼 크기 (안정적인 값은 2MB이지만, 실제 작업 부하에 근거하여 BDP 계산 기반으로 더 크게 설정 가능) |
 
+---
 
 ## 15.3 Kafka에서 기본 버퍼를 512KB로 설정하는 이유
 
@@ -52,23 +53,37 @@ BDP = (네트워크 속도(Gbps) × 왕복 지연 시간(RTT, 초)) ÷ 8
 TCP 소켓 버퍼 크기는 다음 흐름으로 결정됩니다.
 
 1. 소켓 생성 시 기본값 적용
-    - `net.core.rmem_default` (수신 버퍼 기본값)
-    - `net.core.wmem_default` (송신 버퍼 기본값)
+   - `net.core.rmem_default` (수신 버퍼 기본값)
+   - `net.core.wmem_default` (송신 버퍼 기본값)
 
 2. TCP 연결 후 네트워크 상황에 따라 자동 확장
-    - `net.ipv4.tcp_rmem` (수신 버퍼 최소/기본/최대 범위)
-    - `net.ipv4.tcp_wmem` (송신 버퍼 최소/기본/최대 범위)
+   - `net.ipv4.tcp_rmem` (수신 버퍼 최소/기본/최대 범위)
+   - `net.ipv4.tcp_wmem` (송신 버퍼 최소/기본/최대 범위)
 
 3. 소켓 버퍼 크기 확장 시 최대 한도 제한
-    - `net.core.rmem_max`, `net.core.wmem_max` 값을 넘지 못함
+   - `net.core.rmem_max`, `net.core.wmem_max` 값을 넘지 못함
 
 4. 서버 전체 TCP 메모리 총량 제한
-    - `net.ipv4.tcp_mem`에 설정된 값 이상으로는 전체 TCP 소켓 메모리를 사용할 수 없음
-    - `tcp_mem` 값은 페이지 단위(보통 4KB)로 설정되며, 경고선(soft limit)과 절대 한계(hard limit)를 초과할 경우 새 소켓 생성이나 버퍼 확장이 거부될 수 있음
+   - `net.ipv4.tcp_mem`에 설정된 값 이상으로는 전체 TCP 소켓 메모리를 사용할 수 없음
+   - `tcp_mem` 값은 페이지 단위(보통 4KB)로 설정되며, 경고선(soft limit)과 절대 한계(hard limit)를 초과할 경우 새 소켓 생성이나 버퍼 확장이 거부될 수 있음
 
 ---
 
-## 15.6 설정 방법
+## 15.6 다수의 소켓 연결 시 버퍼 크기 조정
+
+Kafka는 여러 프로듀서 및 컨슈머와 동시에 TCP 연결을 유지합니다. 따라서 단일 소켓이 NIC의 전체 대역폭을 모두 사용할 수 없으므로, 연결된 소켓 수를 고려하여 버퍼를 조정해야 합니다.
+
+- NIC 속도가 10Gbps라면 송신과 수신 각각 10Gbps이며, 동시에 사용 가능합니다.
+- 총 예상되는 프로듀서 및 컨슈머 소켓 수로 NIC 속도를 나누어 단일 소켓당 버퍼 크기를 산정해야 합니다.
+
+예시 (RTT 50ms, NIC 10Gbps):
+- BDP = 1250MB/s × 0.05초 = 62.5MB
+- 프로듀서 소켓 100개: 단일 소켓당 수신 버퍼 최소 크기 ≈ 62.5MB ÷ 100 ≈ 0.625MB
+- 컨슈머 소켓 200개: 단일 소켓당 송신 버퍼 최소 크기 ≈ 62.5MB ÷ 200 ≈ 0.3125MB
+
+---
+
+## 15.7 설정 방법
 
 ### Linux 커널 설정 (`/etc/sysctl.conf`)
 ```bash
@@ -76,13 +91,13 @@ TCP 소켓 버퍼 크기는 다음 흐름으로 결정됩니다.
 net.core.rmem_default = 524288
 net.core.wmem_default = 524288
 
-# 소켓 최대 버퍼 크기 (16MB)
-net.core.rmem_max = 16777216
-net.core.wmem_max = 16777216
+# 소켓 최대 버퍼 크기 (2MB)
+net.core.rmem_max = 2097152
+net.core.wmem_max = 2097152
 
 # TCP 동적 버퍼 크기 (min, default, max)
-net.ipv4.tcp_rmem = 4096 524288 16777216
-net.ipv4.tcp_wmem = 4096 524288 16777216
+net.ipv4.tcp_rmem = 4096 524288 2097152
+net.ipv4.tcp_wmem = 4096 524288 2097152
 
 # TCP 메모리 총량 제한 (페이지 단위)
 net.ipv4.tcp_mem = 65536 131072 262144
@@ -98,25 +113,12 @@ sudo sysctl -p
 ### Kafka 설정 (`server.properties`)
 ```properties
 # Kafka 소켓 버퍼 크기 설정
-socket.receive.buffer.bytes=524288
-socket.send.buffer.bytes=524288
+socket.receive.buffer.bytes=2097152
+socket.send.buffer.bytes=2097152
 ```
 > BDP에 따라 더 큰 값을 적용할 수도 있습니다.
 
 > ※ 참고: Kafka 브로커 설정(`socket.receive.buffer.bytes`, `socket.send.buffer.bytes`)은 OS 커널 설정(`net.core.rmem_max`, `net.core.wmem_max`)의 최대값을 초과할 수 없습니다. Kafka가 요청한 값이 커널 최대값을 넘으면 커널이 강제로 잘라 적용합니다. 따라서 OS와 Kafka 설정을 함께 조정해야 합니다.
-
----
-
-## 15.7 NIC 속도별 기본/최대 버퍼 추천값 (RTT 50ms 기준)
-
-| NIC 속도 | BDP (RTT 50ms 기준) | 기본 버퍼 (권장) | 최대 버퍼 (권장) |
-|:---|:---|:---|:---|
-| 1Gbps | 6.25MB | 512KB | 16MB |
-| 10Gbps | 62.5MB | 512KB | 128MB |
-| 25Gbps | 156.25MB | 512KB | 320MB |
-| 100Gbps | 625MB | 512KB | 1.2GB |
-
-※ Kafka에서는 1Gbps~10Gbps 환경을 기준으로 기본 512KB, 최대는 네트워크 특성에 맞춰 설정하는 것이 권장됩니다.
 
 ---
 
