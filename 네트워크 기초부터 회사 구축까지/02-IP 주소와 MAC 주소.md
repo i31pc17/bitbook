@@ -28,7 +28,7 @@
 
 * 같은 네트워크 안에서 **IP만 알면 바로 통신할 수 없음**
 * 실제 데이터는 **MAC 주소**로 전송됨
-* 그래서 장치는 \*\*ARP(Address Resolution Protocol)\*\*으로
+* 그래서 장치는 **ARP(Address Resolution Protocol)** 으로
   "이 IP를 가진 장치의 MAC 주소가 뭐지?" 하고 물어봄
 
 예:
