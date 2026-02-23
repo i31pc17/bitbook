@@ -7,8 +7,10 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from pathlib import Path
@@ -92,9 +94,8 @@ def discover_chapters(book_dir: Path) -> list[tuple[str, str]]:
     return chapters
 
 
-def generate_book_toml(book_dir: Path, title: str, slug: str) -> Path:
-    """각 책 폴더에 book.toml을 생성한다."""
-    theme_rel = "../theme"
+def _generate_book_toml(build_dir: Path, title: str, slug: str) -> Path:
+    """빌드 디렉토리에 book.toml을 생성한다."""
     toml_content = f"""[book]
 title = "{title}"
 authors = []
@@ -106,33 +107,33 @@ build-dir = "book"
 create-missing = false
 
 [output.html]
-theme = "{theme_rel}"
-additional-css = ["{theme_rel}/catppuccin.css"]
-additional-js = ["{theme_rel}/fzf.umd.js", "{theme_rel}/elasticlunr.js", "{theme_rel}/search-override.js"]
+theme = "theme"
+additional-css = ["theme/catppuccin.css"]
+additional-js = ["theme/fzf.umd.js", "theme/elasticlunr.js", "theme/search-override.js"]
 default-theme = "latte"
 preferred-dark-theme = "mocha"
 site-url = "/bitbook/{slug}/"
 git-repository-url = "https://github.com/i31pc17/bitbook"
 """
-    toml_path = book_dir / "book.toml"
+    toml_path = build_dir / "book.toml"
     with open(toml_path, "w", encoding="utf-8") as f:
         f.write(toml_content)
     return toml_path
 
 
-def generate_summary(book_dir: Path, title: str) -> Path:
-    """각 책 폴더에 SUMMARY.md를 생성한다."""
+def _generate_summary(build_dir: Path, title: str) -> Path:
+    """빌드 디렉토리에 SUMMARY.md를 생성한다."""
     lines = [f"# {title}\n\n"]
 
-    readme = book_dir / "README.md"
+    readme = build_dir / "README.md"
     if readme.exists():
         lines.append("- [소개](README.md)\n")
 
-    chapters = discover_chapters(book_dir)
+    chapters = discover_chapters(build_dir)
     for path, ch_title in chapters:
         lines.append(f"- [{ch_title}]({path})\n")
 
-    summary_path = book_dir / "SUMMARY.md"
+    summary_path = build_dir / "SUMMARY.md"
     with open(summary_path, "w", encoding="utf-8") as f:
         f.writelines(lines)
 
@@ -142,6 +143,19 @@ def generate_summary(book_dir: Path, title: str) -> Path:
 def make_slug(path: str) -> str:
     """폴더명을 URL-safe slug로 변환."""
     return path.replace(" ", "-")
+
+
+def _copy_book_source(source_dir: Path, dest_dir: Path):
+    """책 소스 파일을 임시 디렉토리로 복사한다. 빌드 산출물과 무관한 파일만 복사."""
+    skip = IGNORE_DIRS | {"book.toml", "SUMMARY.md"}
+    for item in source_dir.iterdir():
+        if item.name in skip:
+            continue
+        dst = dest_dir / item.name
+        if item.is_dir():
+            shutil.copytree(item, dst)
+        else:
+            shutil.copy2(item, dst)
 
 
 LANDING_TEMPLATE = """<!DOCTYPE html>
@@ -196,45 +210,49 @@ def generate_landing(config: dict, books_meta: list[dict]) -> str:
     )
 
 
-def build_book(book_dir: Path, slug: str) -> bool:
-    """mdbook build를 실행하고 결과를 OUTPUT_DIR/{slug}/ 로 복사."""
-    print(f"  Building: {book_dir.name}...")
-    result = subprocess.run(
-        ["mdbook", "build"],
-        cwd=str(book_dir),
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
-    if result.returncode != 0:
-        print(f"  [FAIL] {book_dir.name}")
-        print(result.stderr)
-        return False
+def build_book(source_dir: Path, title: str, slug: str) -> bool:
+    """임시 폴더에서 mdbook build를 실행하고 결과를 OUTPUT_DIR/{slug}/로 복사한다.
 
-    # book/ -> OUTPUT_DIR/{slug}/
-    src = book_dir / "book"
-    dst = OUTPUT_DIR / slug
-    if dst.exists():
-        shutil.rmtree(dst)
-    shutil.copytree(src, dst)
+    소스 디렉토리는 일체 수정하지 않는다.
+    """
+    print(f"  Building: {source_dir.name}...")
 
-    # 로컬 빌드 결과물 정리
-    shutil.rmtree(src)
+    with tempfile.TemporaryDirectory(prefix="mdbook_") as tmp:
+        tmp_dir = Path(tmp)
 
-    print(f"  [OK] {book_dir.name} -> book/{slug}/")
+        # 1) 소스 복사
+        _copy_book_source(source_dir, tmp_dir)
+
+        # 2) 테마 복사
+        shutil.copytree(THEME_DIR, tmp_dir / "theme")
+
+        # 3) book.toml + SUMMARY.md 생성
+        _generate_book_toml(tmp_dir, title, slug)
+        _generate_summary(tmp_dir, title)
+
+        # 4) mdbook build
+        result = subprocess.run(
+            ["mdbook", "build"],
+            cwd=str(tmp_dir),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        if result.returncode != 0:
+            print(f"  [FAIL] {source_dir.name}")
+            print(result.stderr)
+            return False
+
+        # 5) 결과물을 OUTPUT_DIR/{slug}/ 로 복사
+        build_output = tmp_dir / "book"
+        dst = OUTPUT_DIR / slug
+        if dst.exists():
+            shutil.rmtree(dst)
+        shutil.copytree(build_output, dst)
+
+    # TemporaryDirectory context manager가 자동 정리
+    print(f"  [OK] {source_dir.name} -> book/{slug}/")
     return True
-
-
-def cleanup_generated(book_dir: Path):
-    """빌드 후 생성한 book.toml, SUMMARY.md, theme/ 정리."""
-    for f in ["book.toml", "SUMMARY.md"]:
-        p = book_dir / f
-        if p.exists():
-            p.unlink()
-    # mdbook이 additional-css/js 처리 시 소스 폴더에 theme/ 을 생성하므로 정리
-    theme_in_book = book_dir / "theme"
-    if theme_in_book.exists() and theme_in_book.is_dir():
-        shutil.rmtree(theme_in_book)
 
 
 def serve_book(watch: bool = False, port: int = 3000):
@@ -252,11 +270,13 @@ def serve_book(watch: bool = False, port: int = 3000):
         watcher = threading.Thread(target=_watch_and_rebuild, daemon=True)
         watcher.start()
 
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
+    def _handle_sigint(sig, frame):
         print("\n\nServer stopped.")
         server.server_close()
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, _handle_sigint)
+    server.serve_forever()
 
 
 def _get_md_mtimes() -> dict[str, float]:
@@ -302,10 +322,7 @@ def _watch_and_rebuild():
                         title = book_cfg.get("title", book_path)
                         slug = make_slug(book_path)
                         print(f"\n  🔄 Change detected in {book_path}, rebuilding...")
-                        generate_book_toml(book_dir, title, slug)
-                        generate_summary(book_dir, title)
-                        ok = build_book(book_dir, slug)
-                        cleanup_generated(book_dir)
+                        ok = build_book(book_dir, title, slug)
                         if ok:
                             rebuilt.add(book_path)
 
@@ -377,16 +394,10 @@ def main():
             }
         )
 
-        # 1) book.toml + SUMMARY.md 생성
-        generate_book_toml(book_dir, title, slug)
-        generate_summary(book_dir, title)
         print(f"  [GEN] {title} - {len(chapters)} chapters")
 
         if build_mode:
-            # 2) mdbook build
-            ok = build_book(book_dir, slug)
-            # 3) 생성한 설정파일 정리
-            cleanup_generated(book_dir)
+            ok = build_book(book_dir, title, slug)
             if not ok:
                 sys.exit(1)
 
@@ -396,7 +407,6 @@ def main():
         with open(OUTPUT_DIR / "index.html", "w", encoding="utf-8") as f:
             f.write(html)
         print("  [OK] Landing page generated")
-
 
         # additional-css/js가 ../theme/ 경로를 참조하므로 output 루트에 theme/ 복사
         shared_theme = OUTPUT_DIR / "theme"
@@ -413,7 +423,7 @@ def main():
         if serve_mode:
             serve_book(watch=watch_mode)
     else:
-        print(f"\nGenerated configs for {len(books_meta)} books")
+        print(f"\nFound {len(books_meta)} books")
         print("Run with --build to build all books")
         print("Run with --serve to build and preview locally")
         print("Run with --watch to build, serve, and auto-rebuild on changes")
