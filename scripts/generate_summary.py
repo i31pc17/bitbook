@@ -418,6 +418,11 @@ def main():
         # .nojekyll
         (OUTPUT_DIR / ".nojekyll").touch()
 
+        # CNAME
+        cname = ROOT / "CNAME"
+        if cname.exists():
+            shutil.copy2(cname, OUTPUT_DIR / "CNAME")
+
         print(f"\nBuild complete: {len(books_meta)} books -> book/")
 
         if serve_mode:
