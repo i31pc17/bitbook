@@ -109,7 +109,7 @@ create-missing = false
 [output.html]
 theme = "theme"
 additional-css = ["theme/catppuccin.css"]
-additional-js = ["theme/fzf.umd.js", "theme/elasticlunr.js", "theme/search-override.js"]
+additional-js = ["theme/fzf.umd.js", "theme/elasticlunr.js", "theme/search-override.js", "theme/mermaid-init.js"]
 default-theme = "latte"
 preferred-dark-theme = "mocha"
 site-url = "/bitbook/{slug}/"
