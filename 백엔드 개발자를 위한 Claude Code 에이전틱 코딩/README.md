@@ -19,6 +19,7 @@
 이 책은 그 상태에서 출발한다.
 
 * 예시 스택은 **Kotlin + Spring Boot** 모놀리스
+* 다른 언어에서 출발하는 경우는 37장과 8부 후반에서 따로 다룬다
 * 목적지는 마이크로서비스 분리가 아니라 **분리할 수 있는 상태**
 * 그 과정을 사람이 아니라 **Agent가 수행하고 사람이 검증하는 방식**으로 만든다
 
@@ -105,41 +106,48 @@
 - 43장. 데이터 경계 준비 — 공유 테이블과 조인부터 끊기
 - 44장. 나중에 떼어내기 쉬운 구조 — 코드 · 데이터 · 트랜잭션 · API · 이벤트
 
-### 9부. 반복 가능한 Workflow — Skill · Hook · Subagent
+### 9부. 다른 언어로 넘기기
+> 경계가 정리된 도메인을 새 언어로. 번역보다 검증이 비싸다.
+
+- 45장. 다른 언어로 옮기기 — 무엇부터, 어떻게 같음을 증명하는가
+- 46장. 두 언어가 공존하는 기간 — 라우팅 · 데이터 · 운영
+
+### 10부. 반복 가능한 Workflow — Skill · Hook · Subagent
 > 한 번 잘된 작업 방식을 매번 다시 설명하지 않는다.
 
-- 45장. Skill이란 무엇인가 — 반복되는 절차를 자산으로
-- 46장. 백엔드 Skill 만들기 — API 구현 · 장애 분석 · Migration Review
-- 47장. Hooks — 무조건 실행되어야 하는 것, 그리고 셋의 구분
-- 48장. Subagent — 독립 Context와 역할 분리
-- 49장. 전문 Agent 만들기 — Explorer · Planner · Implementer · Reviewer
-- 50장. Agent Orchestration — 구현과 Review를 분리한다
-- 51장. 병렬 Agent와 Git Worktree — 그리고 Multi-Agent가 나쁠 때
+- 47장. Skill이란 무엇인가 — 반복되는 절차를 자산으로
+- 48장. 백엔드 Skill 만들기 — API 구현 · 장애 분석 · Migration Review
+- 49장. Hooks — 무조건 실행되어야 하는 것, 그리고 셋의 구분
+- 50장. Subagent — 독립 Context와 역할 분리
+- 51장. 전문 Agent 만들기 — Explorer · Planner · Implementer · Reviewer
+- 52장. Agent Orchestration — 구현과 Review를 분리한다
+- 53장. 병렬 Agent와 Git Worktree — 그리고 Multi-Agent가 나쁠 때
 
-### 10부. MCP와 안전한 운영
+### 11부. MCP와 안전한 운영
 > Agent에게 실제 시스템을 보여주되, 할 수 있는 일의 범위를 정한다.
 
-- 52장. MCP란 무엇인가 — Agent에게 실제 시스템을 보여주기
-- 53장. 개발 도구 연결 — GitHub · Jira · Database · Monitoring
-- 54장. 장애 대응 Agent — Issue에서 수정안까지
-- 55장. Permission과 Sandbox — Allow · Ask · Deny, 그리고 격리
-- 56장. Database와 Secret — 환경별 권한 정책
-- 57장. Production에서의 원칙 — Human Approval · Audit · Rollback
+- 54장. MCP란 무엇인가 — Agent에게 실제 시스템을 보여주기
+- 55장. 개발 도구 연결 — GitHub · Jira · Database · Monitoring
+- 56장. 장애 대응 Agent — Issue에서 수정안까지
+- 57장. Permission과 Sandbox — Allow · Ask · Deny, 그리고 격리
+- 58장. Database와 Secret — 환경별 권한 정책
+- 59장. Production에서의 원칙 — Human Approval · Audit · Rollback
 
-### 11부. 우리 팀의 Agent Harness
+### 12부. 우리 팀의 Agent Harness
 > 개인의 요령을 팀의 환경으로 바꾼다. 5장의 구성요소를 실제로 조립한다.
 
-- 58장. 좋은 하네스와 나쁜 하네스 — 무엇이 Agent를 무력화하는가
-- 59장. 우리 프로젝트의 Harness 설계도 그리기
-- 60장. Agent가 실패하기 어렵게 만들기 — 반복해서 틀리면 하네스를 고친다
-- 61장. 팀에 도입하기 — `.claude/` 공유와 CI 자동 Review
+- 60장. 좋은 하네스와 나쁜 하네스 — 무엇이 Agent를 무력화하는가
+- 61장. 우리 프로젝트의 Harness 설계도 그리기
+- 62장. Agent가 실패하기 어렵게 만들기 — 반복해서 틀리면 하네스를 고친다
+- 63장. 팀에 도입하기 — `.claude/` 공유와 CI 자동 Review
 
-### 12부. 실전 종합
+### 13부. 실전 종합
 > 앞의 모든 것을 하나의 작업에 붙여본다.
 
-- 62장. 실전 1 — 요구사항 하나로 기능 개발하기
-- 63장. 실전 2 — 장애 티켓 하나로 문제 해결하기
-- 64장. 실전 3 — 레거시 모듈 하나를 경계 밖으로 밀어내기
+- 64장. 실전 1 — 요구사항 하나로 기능 개발하기
+- 65장. 실전 2 — 장애 티켓 하나로 문제 해결하기
+- 66장. 실전 3 — 레거시 모듈 하나를 경계 밖으로 밀어내기
+- 67장. 실전 4 — 서비스 하나를 다른 언어로 넘기기
 
 ---
 
