@@ -92,53 +92,54 @@
 - 34장. 문서 없는 레거시를 Agent와 함께 읽기 — Entry Point에서 Side Effect까지
 - 35장. 코드베이스 지도 만들기 — Module · Dependency · Domain · Data Flow
 - 36장. Characterization Test — 리팩터링 전에 현재 동작을 고정한다
+- 37장. 관례가 없는 코드베이스에서 — 자체 프레임워크와 계층 미분리
 
 ### 8부. 경계를 긋는 에이전틱 리팩터링
 > 지금 나누지 않는다. 다만 나중에 떼어낼 수 있게 만든다. 이 책의 목적지.
 
-- 37장. 코드에서 경계를 찾기 — 도메인 · 책임 · 데이터 소유권
-- 38장. 무엇부터 정리할 것인가 — 경계 후보의 우선순위
-- 39장. 모놀리스 내부 구조 개선 — Controller · Application · Domain · Infrastructure
-- 40장. 대규모 패키지 이동을 Agent에게 맡기는 방법 — 작게, 검증하며
-- 41장. 경계를 규칙으로 강제하기 — 의존성 테스트로 고정한다
-- 42장. 데이터 경계 준비 — 공유 테이블과 조인부터 끊기
-- 43장. 나중에 떼어내기 쉬운 구조 — 코드 · 데이터 · 트랜잭션 · API · 이벤트
+- 38장. 코드에서 경계를 찾기 — 도메인 · 책임 · 데이터 소유권
+- 39장. 무엇부터 정리할 것인가 — 경계 후보의 우선순위
+- 40장. 모놀리스 내부 구조 개선 — Controller · Application · Domain · Infrastructure
+- 41장. 대규모 패키지 이동을 Agent에게 맡기는 방법 — 작게, 검증하며
+- 42장. 경계를 규칙으로 강제하기 — 의존성 테스트로 고정한다
+- 43장. 데이터 경계 준비 — 공유 테이블과 조인부터 끊기
+- 44장. 나중에 떼어내기 쉬운 구조 — 코드 · 데이터 · 트랜잭션 · API · 이벤트
 
 ### 9부. 반복 가능한 Workflow — Skill · Hook · Subagent
 > 한 번 잘된 작업 방식을 매번 다시 설명하지 않는다.
 
-- 44장. Skill이란 무엇인가 — 반복되는 절차를 자산으로
-- 45장. 백엔드 Skill 만들기 — API 구현 · 장애 분석 · Migration Review
-- 46장. Hooks — 무조건 실행되어야 하는 것, 그리고 셋의 구분
-- 47장. Subagent — 독립 Context와 역할 분리
-- 48장. 전문 Agent 만들기 — Explorer · Planner · Implementer · Reviewer
-- 49장. Agent Orchestration — 구현과 Review를 분리한다
-- 50장. 병렬 Agent와 Git Worktree — 그리고 Multi-Agent가 나쁠 때
+- 45장. Skill이란 무엇인가 — 반복되는 절차를 자산으로
+- 46장. 백엔드 Skill 만들기 — API 구현 · 장애 분석 · Migration Review
+- 47장. Hooks — 무조건 실행되어야 하는 것, 그리고 셋의 구분
+- 48장. Subagent — 독립 Context와 역할 분리
+- 49장. 전문 Agent 만들기 — Explorer · Planner · Implementer · Reviewer
+- 50장. Agent Orchestration — 구현과 Review를 분리한다
+- 51장. 병렬 Agent와 Git Worktree — 그리고 Multi-Agent가 나쁠 때
 
 ### 10부. MCP와 안전한 운영
 > Agent에게 실제 시스템을 보여주되, 할 수 있는 일의 범위를 정한다.
 
-- 51장. MCP란 무엇인가 — Agent에게 실제 시스템을 보여주기
-- 52장. 개발 도구 연결 — GitHub · Jira · Database · Monitoring
-- 53장. 장애 대응 Agent — Issue에서 수정안까지
-- 54장. Permission과 Sandbox — Allow · Ask · Deny, 그리고 격리
-- 55장. Database와 Secret — 환경별 권한 정책
-- 56장. Production에서의 원칙 — Human Approval · Audit · Rollback
+- 52장. MCP란 무엇인가 — Agent에게 실제 시스템을 보여주기
+- 53장. 개발 도구 연결 — GitHub · Jira · Database · Monitoring
+- 54장. 장애 대응 Agent — Issue에서 수정안까지
+- 55장. Permission과 Sandbox — Allow · Ask · Deny, 그리고 격리
+- 56장. Database와 Secret — 환경별 권한 정책
+- 57장. Production에서의 원칙 — Human Approval · Audit · Rollback
 
 ### 11부. 우리 팀의 Agent Harness
 > 개인의 요령을 팀의 환경으로 바꾼다. 5장의 구성요소를 실제로 조립한다.
 
-- 57장. 좋은 하네스와 나쁜 하네스 — 무엇이 Agent를 무력화하는가
-- 58장. 우리 프로젝트의 Harness 설계도 그리기
-- 59장. Agent가 실패하기 어렵게 만들기 — 반복해서 틀리면 하네스를 고친다
-- 60장. 팀에 도입하기 — `.claude/` 공유와 CI 자동 Review
+- 58장. 좋은 하네스와 나쁜 하네스 — 무엇이 Agent를 무력화하는가
+- 59장. 우리 프로젝트의 Harness 설계도 그리기
+- 60장. Agent가 실패하기 어렵게 만들기 — 반복해서 틀리면 하네스를 고친다
+- 61장. 팀에 도입하기 — `.claude/` 공유와 CI 자동 Review
 
 ### 12부. 실전 종합
 > 앞의 모든 것을 하나의 작업에 붙여본다.
 
-- 61장. 실전 1 — 요구사항 하나로 기능 개발하기
-- 62장. 실전 2 — 장애 티켓 하나로 문제 해결하기
-- 63장. 실전 3 — 레거시 모듈 하나를 경계 밖으로 밀어내기
+- 62장. 실전 1 — 요구사항 하나로 기능 개발하기
+- 63장. 실전 2 — 장애 티켓 하나로 문제 해결하기
+- 64장. 실전 3 — 레거시 모듈 하나를 경계 밖으로 밀어내기
 
 ---
 
