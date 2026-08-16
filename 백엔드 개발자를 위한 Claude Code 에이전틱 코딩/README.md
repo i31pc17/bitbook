@@ -100,7 +100,7 @@
 - 38장. 무엇부터 정리할 것인가 — 경계 후보의 우선순위
 - 39장. 모놀리스 내부 구조 개선 — Controller · Application · Domain · Infrastructure
 - 40장. 대규모 패키지 이동을 Agent에게 맡기는 방법 — 작게, 검증하며
-- 41장. 경계를 규칙으로 강제하기 — 의존성 테스트와 Hook
+- 41장. 경계를 규칙으로 강제하기 — 의존성 테스트로 고정한다
 - 42장. 데이터 경계 준비 — 공유 테이블과 조인부터 끊기
 - 43장. 나중에 떼어내기 쉬운 구조 — 코드 · 데이터 · 트랜잭션 · API · 이벤트
 
@@ -110,7 +110,7 @@
 - 44장. Skill이란 무엇인가 — 반복되는 절차를 자산으로
 - 45장. 백엔드 Skill 만들기 — API 구현 · 장애 분석 · Migration Review
 - 46장. Hooks — 무조건 실행되어야 하는 것, 그리고 셋의 구분
-- 47장. Subagent란 무엇인가 — 독립 Context와 역할 분리
+- 47장. Subagent — 독립 Context와 역할 분리
 - 48장. 전문 Agent 만들기 — Explorer · Planner · Implementer · Reviewer
 - 49장. Agent Orchestration — 구현과 Review를 분리한다
 - 50장. 병렬 Agent와 Git Worktree — 그리고 Multi-Agent가 나쁠 때
