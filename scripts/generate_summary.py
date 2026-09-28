@@ -36,6 +36,16 @@ def extract_number(name: str) -> int:
     return int(m.group(1)) if m else 9999
 
 
+def sort_key(name: str) -> tuple[int, str]:
+    """번호가 있으면 번호순, 번호가 없거나 같으면 이름순으로 정렬한다.
+
+    번호 없는 파일(부록 A, B, C ...)은 extract_number가 모두 9999를 돌려주어
+    동점이 되고, 안정 정렬 탓에 파일시스템 순서가 그대로 남는다.
+    이름을 2차 키로 두어 항상 같은 순서가 나오게 한다.
+    """
+    return (extract_number(name), name)
+
+
 def encode_path(posix_path: str) -> str:
     return posix_path.replace(" ", "%20")
 
@@ -61,7 +71,7 @@ def discover_chapters(book_dir: Path) -> list[tuple[str, str]]:
     # 하위 디렉토리의 md 파일
     subdirs = sorted(
         [d for d in book_dir.iterdir() if d.is_dir() and d.name not in IGNORE_DIRS],
-        key=lambda d: extract_number(d.name),
+        key=lambda d: sort_key(d.name),
     )
     for subdir in subdirs:
         md_files = sorted(
@@ -70,7 +80,7 @@ def discover_chapters(book_dir: Path) -> list[tuple[str, str]]:
                 for f in subdir.iterdir()
                 if f.suffix == ".md" and f.name not in IGNORE_FILES
             ],
-            key=lambda f: extract_number(f.name),
+            key=lambda f: sort_key(f.name),
         )
         for md_file in md_files:
             title = get_title(md_file)
@@ -84,7 +94,7 @@ def discover_chapters(book_dir: Path) -> list[tuple[str, str]]:
             for f in book_dir.iterdir()
             if f.suffix == ".md" and f.name not in IGNORE_FILES
         ],
-        key=lambda f: extract_number(f.name),
+        key=lambda f: sort_key(f.name),
     )
     for md_file in md_files:
         title = get_title(md_file)
