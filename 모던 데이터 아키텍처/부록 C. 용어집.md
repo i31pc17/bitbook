@@ -23,8 +23,7 @@
 | Subdomain | 큰 문제를 나눈 작은 문제 영역 | 5장 |
 | Bounded Context | 같은 용어가 일관된 의미를 갖는 경계 | 5장 |
 | Ubiquitous Language | Context 안에서 함께 쓰는 공통 언어 | 5장 |
-| Application Boundary | 애플리케이션 책임의 논리적 경계 | 5장 |
-| Data Domain | 데이터 책임을 가지는 비즈니스 영역 | 6장 |
+| 데이터 도메인 (Data Domain) | 데이터 책임을 가지는 비즈니스 영역 | 6장 |
 | Data Ownership | 데이터의 의미·품질·정책을 책임지는 일 | 6장 |
 | Data Sprawl | 데이터가 무질서하게 퍼지는 상태 | 6장 |
 | 응집도 | 함께 변경되는 것이 얼마나 가까이 있는가 | 4장 |
@@ -88,9 +87,9 @@
 | Input Port / Output Port | 데이터 제품의 입력과 출력 계약 | 14장 |
 | Star Schema | Fact와 Dimension 중심의 분석 모델 | 13장 |
 | Data Vault | Hub·Link·Satellite 기반 모델 | 13장 |
-| SCD | Dimension 속성의 변경 이력을 관리하는 기법 | 13장 |
-| Snapshot | 특정 시점의 전체 상태를 저장 | 13장 |
-| Append-only | 기존 사실을 덮지 않고 계속 추가 | 13장 |
+| SCD | Dimension 속성의 변경 이력을 관리하는 기법 | 14장 |
+| Snapshot | 특정 시점의 전체 상태를 저장 | 14장 |
+| Append-only | 기존 사실을 덮지 않고 계속 추가 | 14장 |
 | Data Quality | 데이터를 믿고 쓸 수 있는 정도 | 14장 |
 | Reconciliation | 원천과 결과를 대조해 차이를 찾는 일 | 14장 |
 | Medallion Architecture | Bronze / Silver / Gold 처리 패턴 | 14장 |
@@ -175,12 +174,10 @@
 | Collaboration | 두 팀이 한동안 붙어 함께 만드는 방식. 한시적으로 쓴다 | 22장 |
 | X-as-a-Service | 만들어 둔 것을 다른 팀이 문서 보고 알아서 쓰는 방식 | 22장 |
 | Facilitation | 한 팀이 다른 팀의 역량을 키워 주고 빠지는 방식 | 22장 |
-| Golden Path | 가장 쉽고 안전하게 정해 둔 기본 경로 | 22장 |
 | Guardrail | 반드시 지켜야 하는 최소한의 경계 | 23장 |
 | Serverless | 서버 설치·확장·운영을 직접 하지 않는 실행 모델. 물리 서버가 없다는 뜻은 아니다 | — |
 | FaaS | 함수 단위로 코드를 실행하는 방식. 서버리스의 대표적인 한 형태 | — |
 | Landing Zone | 표준화된 클라우드 실행 환경 | 부록 A |
-| Blueprint | 반복해서 쓸 수 있는 표준 환경 템플릿 | 부록 A |
 
 ---
 
@@ -194,4 +191,4 @@
 | SPARQL | RDF 그래프에 대한 질의 언어 | 부록 B |
 | SHACL | RDF 그래프의 구조와 조건을 검증 | 부록 B |
 | SKOS | 용어집과 분류 체계를 표현 | 부록 B |
-| Data Marketplace | 데이터 제품을 발견·신청·사용하는 환경 | 부록 B |
+| 데이터 마켓플레이스 | 데이터 제품을 발견·신청·사용하는 환경 | 부록 B |
